@@ -1,43 +1,89 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "../css/Addi.css";
+import { Form } from 'react-router-dom';
 
 const Add = () => {
+    const [emp,setEmp]=useState({
+        name:"",
+        salary:"",
+        experience:"",
+        designation:"",
+        phone:"",
+        email:"",
+        profile:""
+    })
+    const handleChange=(e)=>{
+        console.log(e.target.value);
+        setEmp((pre)=>({
+            ...pre,[e.target.name]:e.target.value
+        }))
+    }
+    const handleSubmit=async(e)=>{
+        e.preventDefault();
+        console.log(emp);
+        const res = await fetch("http://localhost:3000/api/addemp",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(emp)
+        })
+        console.log(res);
+    }
+
+    const handleFile=async(e)=>{
+        console.log(e.target.files[0]);
+        const profile = await convertTBase64(e.target.files[0]);
+        console.log(profile);
+        setEmp((pre)=>({...pre,profile:profile}))
+    }
+
+    function convertTBase64(file){
+        return new Promise((resolve,reject)=>{
+            const fileReader=new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload=()=>{
+                resolve(fileReader.result)
+            }
+            fileReader.onerror=(error)=>{
+                reject(error)
+            }
+        });
+    }
   return (
     <div>
     <div className="container">
         <h1>Employ Registration</h1>
-        <form id="frm" method="post"/>
+        <form id="frm" onSubmit={handleSubmit}>
 
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required/>
+            <label htmlFor="name">Name:</label>
+            <input type="text" id="name" onChange={handleChange} name="name" required/>
 
-            <label for="salary">Salary</label>
-            <input type="number" id="salary" name="salary" required/>
+            <label htmlFor="salary">Salary</label>
+            <input type="number" id="salary" name="salary" onChange={handleChange} required/>
 
-            <label for="experience">Experience</label>
-            <input type="text" id="experience" name="experience" required/>
+            <label htmlFor="experience">Experience</label>
+            <input type="text" id="experience" name="experience" onChange={handleChange} required/>
 
-            <label for="designation">Designation</label>
-            <input type="text" id="designation" name="designation" required/>
+            <label htmlFor="designation">Designation</label>
+            <input type="text" id="designation" name="designation" onChange={handleChange}required/>
 
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required/>
+            <label htmlFor="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone"  onChange={handleChange}required/>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required/>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" name="email"  onChange={handleChange}required/>
 
             <div className="prf" >
                 <img src="" className="prfimg" id="proimg" alt=""/>
             </div>
 
-            <label for="profile">Profile</label>
-            <input type="file" id="profile" name="profile" required/>
+            <label htmlFor="profile">Profile</label>
+            <input type="file" id="profile" name="profile" onChange={handleFile}required/>
 
             <div className="buttons">
-                <button >Submit</button>
+                <button>Submit</button>
                 <button type="reset">Reset</button>
             </div>
-        <form/>
+        </form>
     </div>
 </div>
   )
