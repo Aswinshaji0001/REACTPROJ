@@ -12,9 +12,9 @@ function App() {
       <BrowserRouter>
         <Routes>
             <Route path="/" Component={Home}></Route>
-            <Route path="/more" Component={More}></Route>
+            <Route path="/more/:id" Component={More}></Route>
             <Route path="/add" Component={Add}></Route>
-            <Route path="/edit" Component={Edit}></Route>
+            <Route path="/edit/:id" Component={Edit}></Route>
         </Routes>
       </BrowserRouter>
     </>

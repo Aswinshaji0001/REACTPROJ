@@ -41,7 +41,7 @@ function Home(){
             <div className="card-content">
                 <h2 className="card-name">{employees.name}</h2>
                 <p className="card-designation" value="">{employees.designation}</p>
-                <Link to={"/more"}><button className="see-more">See More</button></Link>
+                <Link to={`/more/${employees._id}`}><button className="see-more">See More</button></Link>
              </div>
             </div>
     )

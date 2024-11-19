@@ -1,53 +1,79 @@
+import { useEffect, useState } from "react";
 import "../css/More.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function More(){
+    const {id} = useParams();
+    const [employ,setEmploy]=useState({});
+    useEffect(()=>{
+        getEmployees();
+    },[]);
+    const getEmployees=async()=>{
+        const res = await fetch(`http://localhost:3000/api/getemploy/${id}`)
+        const data = await res.json();
+        setEmploy({...data})
+    }
+    const deleteEmploy=async()=>{
+        
+            fetch(`http://localhost:3000/api/deleteemploy/${id}`,{
+              method:"DELETE",
+                headers:{"Content-Type":"application/json"}
+            }).then((res)=>{
+                  console.log(res);
+                  if(res.status==201){
+                      alert("Deleted")
+                  }else{
+                      alert("error");
+                  }
+              }). catch ((error)=>{
+                  console.log(error);
+                  
+              })
+    }
     return (
         <>
         <div className="cos">
         <div className="cos1">
             <div className="cos2">
-                <img src="" alt=""/>
+                <img src={employ.profile} alt=""/>
             </div>
             <div className="cos3">
                 <div className="details">
                     <table>
-                        <tr>
-                            <th>Emp-ID</th>
-                            <td></td>
-                        </tr>
+                        <tbody>
                         <tr>
                             <th>Emp-Name</th>
-                            <td></td>
+                            <td>{employ.name}</td>
                         </tr>
                         <tr>
                             <th>Salary</th>
-                            <td ></td>
+                            <td>{employ.salary}</td>
 
                         </tr>
                         <tr>
                             <th>Experience</th>
-                            <td></td>
+                            <td>{employ.experience}</td>
                         </tr>
                         <tr>
                             <th>Designation</th>
-                            <td></td>
+                            <td>{employ.designation}</td>
                         </tr>
                         <tr>
-                            <th rowspan="2">Contact</th>
-                            <td></td>
+                            <th rowSpan="2">Contact</th>
+                            <td>{employ.phone}</td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>{employ.email}</td>
                         </tr>
                         <tr>
                             <td className="actions" align="right">
-                            <Link to="/edit"><button className="button-3">Edit</button></Link>
+                            <Link to={`/edit/${employ._id}`}><button className="see-more">Edit</button></Link>
                             </td>
                             <td className="actions" >
-                                <button className="button-3" onclick="">Delete</button>
+                                <button className="button-3" onClick={deleteEmploy}>Delete</button>
                             </td>
                         </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
